@@ -6,14 +6,15 @@ import {
   Typography,
   Link as MuiLink,
   Stack,
+  Paper,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import axiosInstance from "../api/axios";
-import { styled } from "@mui/material/styles";
-
+import { styled, useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const GradientBackground = styled(Box)(() => ({
   background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
@@ -25,7 +26,7 @@ const GradientBackground = styled(Box)(() => ({
   position: "relative",
   overflow: "hidden",
   "&::before": {
-    content: '""',
+    content: `''`,
     position: "absolute",
     top: 0,
     left: 0,
@@ -40,20 +41,40 @@ const GradientBackground = styled(Box)(() => ({
   },
 }));
 
-
-const StyledContainer = styled(Box)(() => ({
+const MainContainer = styled(Box)(() => ({
+  display: "flex",
+  maxWidth: "1200px",
   width: "100%",
-  maxWidth: 400,
-  padding: "32px",
-  backgroundColor: "rgba(255, 255, 255, 0.95)",
-  backdropFilter: "blur(20px)",
   borderRadius: "20px",
-  boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
-  border: "1px solid rgba(255, 255, 255, 0.18)",
-  position: "relative",
-  zIndex: 1,
+  overflow: "hidden",
+  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.1)",
+  backgroundColor: "white",
+  minHeight: "600px",
 }));
 
+const LeftSection = styled(Box)(() => ({
+  flex: 1,
+  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+  padding: "48px",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  color: "white",
+  position: "relative",
+  overflow: "hidden",
+}));
+
+const RightSection = styled(Paper)(() => ({
+  flex: 1,
+  padding: "48px",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  backgroundColor: "white",
+  borderRadius: 0,
+  boxShadow: "none",
+}));
 
 const StyledTextField = styled(TextField)(() => ({
   "& .MuiOutlinedInput-root": {
@@ -83,7 +104,6 @@ const StyledTextField = styled(TextField)(() => ({
   },
 }));
 
-
 const StyledButton = styled(Button)(() => ({
   borderRadius: "12px",
   padding: "12px 24px",
@@ -105,12 +125,43 @@ const StyledButton = styled(Button)(() => ({
   },
 }));
 
-
 const StyledAlert = styled(Alert)(() => ({
   borderRadius: "12px",
   "& .MuiAlert-icon": {
     alignItems: "center",
   },
+}));
+
+const TaskCard = styled(Box)(() => ({
+  backgroundColor: "rgba(255, 255, 255, 0.15)",
+  backdropFilter: "blur(10px)",
+  borderRadius: "16px",
+  padding: "16px",
+  margin: "8px",
+  border: "1px solid rgba(255, 255, 255, 0.2)",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-4px)",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+  },
+}));
+
+const StatusChip = styled(Box)<{ status: string }>(({ status }) => ({
+  display: "inline-block",
+  padding: "4px 12px",
+  borderRadius: "20px",
+  fontSize: "12px",
+  fontWeight: 600,
+  backgroundColor:
+    status === "progress"
+      ? "#4CAF50"
+      : status === "review"
+      ? "#FF9800"
+      : status === "completed"
+      ? "#2196F3"
+      : "#9C27B0",
+  color: "white",
+  marginBottom: "8px",
 }));
 
 interface User {
@@ -122,7 +173,6 @@ interface User {
 }
 
 function Register() {
-  
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");
@@ -132,7 +182,9 @@ function Register() {
   const [formError, setFormError] = useState("");
   const navigate = useNavigate();
 
-  
+  const theme = useTheme();
+  const isMdDown = useMediaQuery(theme.breakpoints.down("md"));
+
   const { isPending, mutate } = useMutation({
     mutationKey: ["register-user"],
     mutationFn: async (newUser: User) => {
@@ -148,10 +200,9 @@ function Register() {
     },
     onSuccess: () => {
       navigate("/login");
-    }
+    },
   });
 
-  // Your original handleSignUp function - unchanged
   function handleSignUp() {
     setFormError("");
     if (password !== Confirmpassword) {
@@ -164,118 +215,197 @@ function Register() {
 
   return (
     <GradientBackground>
-      <StyledContainer>
-        <Typography 
-          variant="h4" 
-          fontWeight={700} 
-          gutterBottom
-          sx={{
-            textAlign: "center",
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            marginBottom: 3,
-          }}
-        >
-          Create Account
-        </Typography>
-        
-        <Stack spacing={2}>
-          {formError && (
-            <StyledAlert severity="error">
-              {formError}
-            </StyledAlert>
-          )}
-          
-          <StyledTextField
-            label="firstName"
-            type="text"
-            fullWidth
-            margin="normal"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-          
-          <StyledTextField
-            label="lastName"
-            type="text"
-            fullWidth
-            margin="normal"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-          
-          <StyledTextField
-            label="emailAddress"
-            type="text"
-            fullWidth
-            margin="normal"
-            value={emailAddress}
-            onChange={(e) => setEmailAddress(e.target.value)}
-          />
-          
-          <StyledTextField
-            label="userName"
-            type="text"
-            fullWidth
-            margin="normal"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-          
-          <StyledTextField
-            label="password"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+      <MainContainer>
+        {!isMdDown && (
+          <LeftSection>
+            <Box sx={{ textAlign: "center", marginBottom: "32px" }}>
+              <Typography
+                variant="h2"
+                fontWeight={700}
+                sx={{
+                  fontSize: { xs: "2.5rem", md: "3.5rem" },
+                  marginBottom: "16px",
+                  textShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                }}
+              >
+                TaskAura
+              </Typography>
+              <Typography
+                variant="h6"
+                sx={{
+                  opacity: 0.9,
+                  fontSize: { xs: "1rem", md: "1.25rem" },
+                  fontWeight: 400,
+                }}
+              >
+                Brighten your day, one task at a time
+              </Typography>
+            </Box>
 
-          <StyledTextField
-            label="Confirm password"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={Confirmpassword}
-            onChange={(e) => setConfPassword(e.target.value)}
-          />
-          
-          <StyledButton
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ mt: 2 }}
-            onClick={handleSignUp}
-            disabled={isPending}
-          >
-            {isPending ? "Creating Account..." : "REGISTER"}
-          </StyledButton>
-        </Stack>
-        
-        <Typography 
-          textAlign="center" 
-          mt={2}
-          sx={{ color: "text.secondary" }}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+                width: "100%",
+                maxWidth: "400px",
+              }}
+            >
+              <TaskCard>
+                <StatusChip status="progress">In Progress</StatusChip>
+                <Typography variant="body2" fontWeight={600}>
+                  Design new dashboard
+                </Typography>
+                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                  Creating modern UI components
+                </Typography>
+              </TaskCard>
+
+              <TaskCard>
+                <StatusChip status="review">Review</StatusChip>
+                <Typography variant="body2" fontWeight={600}>
+                  API Documentation
+                </Typography>
+                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                  Finalizing endpoint specifications
+                </Typography>
+              </TaskCard>
+
+              <TaskCard>
+                <StatusChip status="completed">Completed</StatusChip>
+                <Typography variant="body2" fontWeight={600}>
+                  User Research
+                </Typography>
+                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                  Gathered insights from 50+ users
+                </Typography>
+              </TaskCard>
+            </Box>
+          </LeftSection>
+        )}
+
+        <RightSection
+          sx={
+            isMdDown
+              ? {
+                  width: "100%",
+                  maxWidth: "400px",
+                  margin: "auto",
+                  borderRadius: "20px",
+                }
+              : {}
+          }
         >
-          Already have an account?{" "}
-          <MuiLink 
-            component={Link} 
-            to="/login"
+          <Typography
+            variant="h4"
+            fontWeight={700}
+            gutterBottom
             sx={{
-              color: "#667eea",
-              fontWeight: 600,
-              textDecoration: "none",
-              "&:hover": {
-                textDecoration: "underline",
-              },
+              textAlign: "center",
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              marginBottom: "24px",
             }}
           >
-            Log In
-          </MuiLink>
-        </Typography>
-      </StyledContainer>
+            Create Account
+          </Typography>
+
+          <Stack spacing={2}>
+            {formError && (
+              <StyledAlert severity="error">{formError}</StyledAlert>
+            )}
+
+            <StyledTextField
+              label="firstName"
+              type="text"
+              fullWidth
+              margin="normal"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+
+            <StyledTextField
+              label="lastName"
+              type="text"
+              fullWidth
+              margin="normal"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+
+            <StyledTextField
+              label="emailAddress"
+              type="text"
+              fullWidth
+              margin="normal"
+              value={emailAddress}
+              onChange={(e) => setEmailAddress(e.target.value)}
+            />
+
+            <StyledTextField
+              label="userName"
+              type="text"
+              fullWidth
+              margin="normal"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
+
+            <StyledTextField
+              label="password"
+              type="password"
+              fullWidth
+              margin="normal"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <StyledTextField
+              label="Confirm password"
+              type="password"
+              fullWidth
+              margin="normal"
+              value={Confirmpassword}
+              onChange={(e) => setConfPassword(e.target.value)}
+            />
+
+            <StyledButton
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mt: 2 }}
+              onClick={handleSignUp}
+              disabled={isPending}
+            >
+              {isPending ? "Creating Account..." : "REGISTER"}
+            </StyledButton>
+          </Stack>
+
+          <Typography
+            textAlign="center"
+            marginTop="16px"
+            sx={{ color: "text.secondary" }}
+          >
+            Already have an account?{" "}
+            <MuiLink
+              component={Link}
+              to="/login"
+              sx={{
+                color: "#667eea",
+                fontWeight: 600,
+                textDecoration: "none",
+                "&:hover": {
+                  textDecoration: "underline",
+                },
+              }}
+            >
+              Log In
+            </MuiLink>
+          </Typography>
+        </RightSection>
+      </MainContainer>
     </GradientBackground>
   );
 }
