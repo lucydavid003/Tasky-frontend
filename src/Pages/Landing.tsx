@@ -90,7 +90,7 @@ const AnimatedTaskBoardIllustration: React.FC = () => (
       </Card>
     </Fade>
 
-    
+  
     <Avatar
       sx={{
         width: 70,
