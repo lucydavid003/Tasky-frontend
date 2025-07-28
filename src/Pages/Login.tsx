@@ -43,7 +43,7 @@ function Login() {
     },
     onSuccess: (data) => {
       setUser(data);
-      navigate("/dashboard");
+      navigate("/dashboard/tasks");
     },
   });
 
