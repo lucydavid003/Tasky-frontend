@@ -63,7 +63,7 @@ function Profile() {
 
   const handleUserUpdate = () => updateUserMutation.mutate(user);
   const handlePasswordUpdate = () => updatePasswordMutation.mutate(passwordData);
-  navigate("/dashboard")
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
