@@ -15,84 +15,162 @@ import axiosInstance from "../api/axios";
 import { styled } from "@mui/material/styles";
 
 
-const GradientBackground = styled(Box)(() => ({
-  background: "linear-gradient(135deg, #8a9ffc 0%, #9b72e6 100%)",
-  minHeight: "100vh",
+const FullScreenContainer = styled(Box)(() => ({
   display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end", 
-  padding: "20px",
+  minHeight: "100vh",
+  width: "100%",
 }));
 
 
-const FormContainer = styled(Box)(({ theme }) => ({
-  width: "100%",
-  maxWidth: "50vw", 
+const LeftHalf = styled(Box)(() => ({
+  flex: 1,
+  background: "linear-gradient(135deg, #8a9ffc 0%, #9b72e6 100%)",
+  
+}))
+
+const RightHalf = styled(Box)(() => ({
+  flex: 1,
+  background: "linear-gradient(135deg, #8a9ffc 0%, #9b72e6 100%)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   padding: "40px",
-  backgroundColor: "rgba(255, 255, 255, 0.95)",
-  backdropFilter: "blur(20px)",
-  borderRadius: "20px",
-  boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
-  border: "1px solid rgba(255, 255, 255, 0.18)",
-  [theme.breakpoints.down("sm")]: { 
-    maxWidth: "100%",
+  position: "relative",
+  overflow: "hidden",
+  "&::before": {
+    content: `''`,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: `
+      radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.08) 0%, transparent 50%)
+    `,
+    pointerEvents: "none",
   },
 }));
 
 
-const StyledTextField = styled(TextField)(() => ({
+const BeautifulFormContainer = styled(Box)(() => ({
+  width: "100%",
+  maxWidth: "450px",
+  padding: "48px",
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  backdropFilter: "blur(25px)",
+  borderRadius: "24px",
+  boxShadow: `
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 8px 32px rgba(31, 38, 135, 0.37),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5)
+  `,
+  border: "1px solid rgba(255, 255, 255, 0.2)",
+  position: "relative",
+  "&::before": {
+    content: `''`,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: "24px",
+    padding: "1px",
+    background: "linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1))",
+    mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+    maskComposite: "exclude",
+    pointerEvents: "none",
+  },
+}));
+
+
+const ElegantTextField = styled(TextField)(() => ({
   "& .MuiOutlinedInput-root": {
-    borderRadius: "12px",
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    transition: "all 0.3s ease",
+    borderRadius: "16px",
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(255, 255, 255, 0.3)",
+    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
     "&:hover": {
-      backgroundColor: "rgba(255, 255, 255, 0.9)",
-      transform: "translateY(-1px)",
-      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+      backgroundColor: "rgba(255, 255, 255, 0.85)",
+      transform: "translateY(-2px)",
+      boxShadow: "0 8px 25px rgba(0, 0, 0, 0.15)",
+      border: "1px solid rgba(138, 159, 252, 0.4)",
     },
     "&.Mui-focused": {
-      backgroundColor: "rgba(255, 255, 255, 1)",
-      transform: "translateY(-1px)",
-      boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
+      backgroundColor: "rgba(255, 255, 255, 0.95)",
+      transform: "translateY(-2px)",
+      boxShadow: "0 12px 35px rgba(138, 159, 252, 0.25)",
       "& .MuiOutlinedInput-notchedOutline": {
-        borderColor: "#667eea",
+        borderColor: "#8a9ffc",
         borderWidth: "2px",
       },
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      border: "none",
     },
   },
   "& .MuiInputLabel-root": {
     fontWeight: 500,
+    color: "rgba(0, 0, 0, 0.7)",
     "&.Mui-focused": {
-      color: "#667eea",
+      color: "#8a9ffc",
+      fontWeight: 600,
     },
   },
 }));
 
-
-const StyledButton = styled(Button)(() => ({
-  borderRadius: "12px",
-  padding: "12px 24px",
+const StunningButton = styled(Button)(() => ({
+  borderRadius: "16px",
+  padding: "16px 32px",
   fontSize: "16px",
-  fontWeight: 600,
+  fontWeight: 700,
   textTransform: "none",
   background: "linear-gradient(135deg, #8a9ffc 0%, #9b72e6 100%)",
-  boxShadow: "0 4px 15px rgba(102, 126, 234, 0.4)",
-  transition: "all 0.3s ease",
+  boxShadow: `
+    0 8px 25px rgba(138, 159, 252, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.15)
+  `,
+  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+  position: "relative",
+  overflow: "hidden",
+  "&::before": {
+    content: `''`,
+    position: "absolute",
+    top: 0,
+    left: "-100%",
+    width: "100%",
+    height: "100%",
+    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
+    transition: "left 0.6s",
+  },
   "&:hover": {
-    transform: "translateY(-2px)",
-    boxShadow: "0 6px 20px rgba(102, 126, 234, 0.6)",
-    background: "linear-gradient(135deg, #7a8efb 0%, #8b62d5 100%)", 
+    transform: "translateY(-3px)",
+    boxShadow: `
+      0 15px 35px rgba(138, 159, 252, 0.6),
+      0 8px 20px rgba(0, 0, 0, 0.2)
+    `,
+    background: "linear-gradient(135deg, #7a8efb 0%, #8b62d5 100%)",
+    "&::before": {
+      left: "100%",
+    },
+  },
+  "&:active": {
+    transform: "translateY(-1px)",
   },
   "&:disabled": {
-    background: "rgba(102, 126, 234, 0.5)",
+    background: "rgba(138, 159, 252, 0.5)",
     transform: "none",
     boxShadow: "none",
   },
 }));
 
-
-const StyledAlert = styled(Alert)(() => ({
-  borderRadius: "12px",
+const BeautifulAlert = styled(Alert)(() => ({
+  borderRadius: "16px",
+  backgroundColor: "rgba(244, 67, 54, 0.1)",
+  backdropFilter: "blur(10px)",
+  border: "1px solid rgba(244, 67, 54, 0.2)",
   "& .MuiAlert-icon": {
     alignItems: "center",
   },
@@ -107,7 +185,7 @@ interface User {
 }
 
 function Register() {
-
+  
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");
@@ -148,115 +226,127 @@ function Register() {
   }
 
   return (
-    <GradientBackground>
-      <FormContainer>
-        <Typography 
-          variant="h4" 
-          fontWeight={700} 
-          gutterBottom
-          sx={{
-            textAlign: "center",
-            background: "linear-gradient(135deg, #8a9ffc 0%, #9b72e6 100%)", // Brighter shades
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            marginBottom: "32px",
-          }}
-        >
-          Create Account
-        </Typography>
+    <FullScreenContainer>
+      <LeftHalf>
         
-        <Stack spacing={3}>
-          {formError && (
-            <StyledAlert severity="error">
-              {formError}
-            </StyledAlert>
-          )}
-          
-          <StyledTextField
-            label="First Name"
-            type="text"
-            fullWidth
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-          
-          <StyledTextField
-            label="Last Name"
-            type="text"
-            fullWidth
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-          
-          <StyledTextField
-            label="Email Address"
-            type="email"
-            fullWidth
-            value={emailAddress}
-            onChange={(e) => setEmailAddress(e.target.value)}
-          />
-          
-          <StyledTextField
-            label="Username"
-            type="text"
-            fullWidth
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-          
-          <StyledTextField
-            label="Password"
-            type="password"
-            fullWidth
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-          <StyledTextField
-            label="Confirm Password"
-            type="password"
-            fullWidth
-            value={Confirmpassword}
-            onChange={(e) => setConfPassword(e.target.value)}
-          />
-          
-          <StyledButton
-            variant="contained"
-            fullWidth
-            onClick={handleSignUp}
-            disabled={isPending}
-            sx={{ mt: 3 }}
-          >
-            {isPending ? "Creating Account..." : "REGISTER"}
-          </StyledButton>
-        </Stack>
-        
-        <Typography 
-          textAlign="center" 
-          sx={{ 
-            color: "text.secondary",
-            marginTop: "24px"
-          }}
-        >
-          Already have an account?{" "}
-          <MuiLink 
-            component={Link} 
-            to="/login"
+      </LeftHalf>
+      
+      <RightHalf>
+        <BeautifulFormContainer>
+          <Typography 
+            variant="h3" 
+            fontWeight={800} 
+            gutterBottom
             sx={{
-              color: "#667eea",
-              fontWeight: 600,
-              textDecoration: "none",
-              "&:hover": {
-                textDecoration: "underline",
-              },
+              textAlign: "center",
+              background: "linear-gradient(135deg, #8a9ffc 0%, #9b72e6 100%)",
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              marginBottom: "40px",
+              fontSize: { xs: "2rem", md: "2.5rem" },
+              textShadow: "0 2px 4px rgba(0,0,0,0.1)",
             }}
           >
-            Log In
-          </MuiLink>
-        </Typography>
-      </FormContainer>
-    </GradientBackground>
+            Create Account
+          </Typography>
+          
+          <Stack spacing={3}>
+            {formError && (
+              <BeautifulAlert severity="error">
+                {formError}
+              </BeautifulAlert>
+            )}
+            
+            <ElegantTextField
+              label="First Name"
+              type="text"
+              fullWidth
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+            
+            <ElegantTextField
+              label="Last Name"
+              type="text"
+              fullWidth
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+            
+            <ElegantTextField
+              label="Email Address"
+              type="email"
+              fullWidth
+              value={emailAddress}
+              onChange={(e) => setEmailAddress(e.target.value)}
+            />
+            
+            <ElegantTextField
+              label="Username"
+              type="text"
+              fullWidth
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
+            
+            <ElegantTextField
+              label="Password"
+              type="password"
+              fullWidth
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <ElegantTextField
+              label="Confirm Password"
+              type="password"
+              fullWidth
+              value={Confirmpassword}
+              onChange={(e) => setConfPassword(e.target.value)}
+            />
+            
+            <StunningButton
+              variant="contained"
+              fullWidth
+              onClick={handleSignUp}
+              disabled={isPending}
+              sx={{ mt: 4 }}
+            >
+              {isPending ? "Creating Account..." : "REGISTER"}
+            </StunningButton>
+          </Stack>
+          
+          <Typography 
+            textAlign="center" 
+            sx={{ 
+              color: "rgba(0, 0, 0, 0.6)",
+              marginTop: "32px",
+              fontSize: "16px"
+            }}
+          >
+            Already have an account?{" "}
+            <MuiLink 
+              component={Link} 
+              to="/login"
+              sx={{
+                color: "#8a9ffc",
+                fontWeight: 700,
+                textDecoration: "none",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  color: "#7a8efb",
+                  textDecoration: "underline",
+                  textDecorationColor: "#7a8efb",
+                },
+              }}
+            >
+              Log In
+            </MuiLink>
+          </Typography>
+        </BeautifulFormContainer>
+      </RightHalf>
+    </FullScreenContainer>
   );
 }
 
